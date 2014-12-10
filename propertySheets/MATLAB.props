@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ImportGroup Label="PropertySheets" />
+  <PropertyGroup Label="UserMacros">
+    <MATLAB_BASE Condition="'$(Platform)' == 'Win32'">$(MATLAB32_ROOT)</MATLAB_BASE>
+    <MATLAB_BASE Condition="'$(Platform)' == 'x64'">$(MATLAB_ROOT)</MATLAB_BASE>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetExt Condition="'$(Platform)' == 'Win32'">.mexw32</TargetExt>
+    <TargetExt Condition="'$(Platform)' == 'x64'">.mexw64</TargetExt>
+    <EmbedManifest>false</EmbedManifest>
+    <ConfigurationType>DynamicLibrary</ConfigurationType> <!-- must only be in project? -->
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <AdditionalIncludeDirectories>$(MATLAB_BASE)\extern\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>MATLAB_MEX_FILE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <AdditionalLibraryDirectories>$(MATLAB_BASE)\extern\lib\win64\microsoft;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libut.lib;libmx.lib;libmex.lib;libmat.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateMapFile>true</GenerateMapFile>
+      <Profile>true</Profile>
+      <AdditionalOptions> /EXPORT:mexFunction %(AdditionalOptions)</AdditionalOptions>
+    </Link>
+    <Manifest>
+      <OutputManifestFile>$(IntDir)$(TargetName)$(TargetExt).manifest</OutputManifestFile>
+    </Manifest>
+    <ManifestResourceCompile>
+      <ResourceOutputFileName>$(IntDir)$(TargetName)$(TargetExt).manifest.res</ResourceOutputFileName>
+    </ManifestResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup />
+</Project>
