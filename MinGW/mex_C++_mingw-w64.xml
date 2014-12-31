@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<!-- x86_64-4.9.2-release-posix-seh-rt_v3-rev1.7z -->
+<!-- MEX XML configuration for MinGW
+    by Jonathan Chappelow (chappjc)
+    x86_64-4.9.2-release-posix-seh-rt_v3-rev1.7z -->
 <config
     Name="MinGW-w64 GCC 4.9.2 posixthreads seh"
     ShortName="MINGW64"
