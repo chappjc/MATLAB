@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!-- x86_64-4.9.2-release-posix-seh-rt_v3-rev1.7z -->
+<config
+    Name="MinGW-w64 GCC 4.9.2 posixthreads seh"
+    ShortName="MINGW64"
+    Manufacturer="GNU"
+    Version="4.9.2"
+    Language="C++"
+    Priority="B"
+    Location="$MINGWROOT\" >
+    <Details
+        CompilerExecutable="$COMPILER"
+        CompilerDefines="$COMPDEFINES"
+        CompilerFlags="$COMPFLAGS"
+        OptimizationFlags="$OPTIMFLAGS"
+        DebugFlags="$DEBUGFLAGS"
+        IncludeFlags="$INCLUDE"
+        LinkerExecutable="$LINKER"
+        LinkerFlags="$LINKFLAGS"
+        LinkerLibraries="$LINKLIBS"
+        LinkerDebugFlags="$LINKDEBUGFLAGS"
+        LinkerOptimizationFlags="$LINKOPTIMFLAGS"
+        CommandLineShell="$MINGWROOT\mingw-w64_vars.bat "
+		CommandLineShellArg=""
+        CompilerDefineFormatter="-D%s"
+        LinkerLibrarySwitchFormatter="lib%s.lib;%s.lib"
+        LinkerPathFormatter="-L%s"
+		LibrarySearchPath="$$LIB;$$LIBPATH;$$PATH;$$INCLUDE;$MATLABROOT\extern\lib\$ARCH\microsoft"
+    />
+    <!-- GCC compiler and linker options: 
+		https://gcc.gnu.org/onlinedocs/gcc/Invoking-GCC.html
+		https://gcc.gnu.org/onlinedocs/gcc/Option-Summary.html
+		https://gcc.gnu.org/onlinedocs/gcc/i386-and-x86-64-Windows-Options.html
+		https://gcc.gnu.org/onlinedocs/gcc/Link-Options.html	-->
+    <vars
+          CMDLINE100="$COMPILER -c $COMPFLAGS $OPTIM $COMPDEFINES $INCLUDE $SRC -o$OBJ"
+          CMDLINE200="$LINKER $LINKFLAGS $LINKTYPE $LINKOPTIM $LINKEXPORT $OBJS $LINKLIBS -o$EXE"
+          CMDLINE250=""
+          CMDLINE300="del $OBJ"
+          
+          COMPILER="x86_64-w64-mingw32-g++"
+          COMPFLAGS="-m64 -mwin32 -mdll -Wall -std=c++11 -Wno-sign-compare "
+          COMPDEFINES=" $MATLABMEX"
+          MATLABMEX=" -DMATLAB_MEX_FILE"
+          OPTIMFLAGS="-DNDEBUG -O3"
+          INCLUDE="-I&quot;$MATLABROOT\extern\include&quot; -I&quot;$MATLABROOT\simulink\include&quot;"
+          DEBUGFLAGS="-g"
+          
+          LINKER="x86_64-w64-mingw32-g++"
+          LINKFLAGS=" "
+		  LINKTYPE="-shared "
+          LINKEXPORT="-Wl,--export-all-symbols "
+          LINKLIBS="-L&quot;$MATLABROOT\extern\lib\$ARCH\microsoft&quot; -L&quot;$MATLABROOT\bin\win64&quot; -lmex -lmx -leng -lmat -lmwlapack -lmwblas "
+          LINKDEBUGFLAGS="-g"
+          LINKOPTIMFLAGS="-O3"
+
+          OBJEXT=".obj"
+          LDEXT=".mexw64"
+		  SETENV="set COMPILER=$COMPILER 
+				set COMPFLAGS=-c $COMPFLAGS $COMPDEFINES $MATLABMEX 
+				set OPTIMFLAGS=$OPTIMFLAGS 
+				set DEBUGFLAGS=$DEBUGFLAGS 
+				set LINKER=$LINKER 
+				set LINKFLAGS=$LINKFLAGS $LINKTYPE $LINKLIBS $LINKEXPORT 
+				set LINKDEBUGFLAGS=-g 
+				set NAME_OUTPUT=-o &quot;%OUTDIR%%MEX_NAME%%MEX_EXT%&quot;"
+    />
+    <client>
+    </client>
+	    <locationFinder>
+		<MINGWROOT>
+			<envVarExists name="MINGWROOT" />
+		</MINGWROOT>
+		</locationFinder>
+    <env
+        MINGWROOT="C:\mingw-w64\x86_64-4.9.2-release-posix-seh-rt_v3-rev1"
+        PATH="%MINGWROOT%\bin;%PATH%"
+        INCLUDE="%MINGWROOT%\bin"
+        LIB="%MINGWROOT%\lib;$MATLABROOT\lib\$ARCH"
+        LIBPATH="%MINGWROOT%\lib"
+    />
+</config>
