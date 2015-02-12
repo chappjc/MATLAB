@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- MEX XML configuration for MinGW
     by Jonathan Chappelow (chappjc)
-    x86_64-4.9.2-release-posix-seh-rt_v3-rev1.7z -->
+    x86_64-4.9.2-release-posix-seh-rt_v3-rev1.7z
+    
+    LocationFinder is used at setup time *and* compile time to get $MINGWROOT 
+    from the MINGWROOT environment variable. -->
 <config
     Name="MinGW-w64 GCC 4.9.2 posixthreads seh"
     ShortName="MINGW64"
@@ -34,6 +37,7 @@
 		https://gcc.gnu.org/onlinedocs/gcc/Option-Summary.html
 		https://gcc.gnu.org/onlinedocs/gcc/i386-and-x86-64-Windows-Options.html
 		https://gcc.gnu.org/onlinedocs/gcc/Link-Options.html	-->
+	<!-- NOTE about LINKEXPORT: passing export-all-symbols to linker may NOT be necessary -->
     <vars
           CMDLINE100="$COMPILER -c $COMPFLAGS $OPTIM $COMPDEFINES $INCLUDE $SRC -o$OBJ"
           CMDLINE200="$LINKER $LINKFLAGS $LINKTYPE $LINKOPTIM $LINKEXPORT $OBJS $LINKLIBS -o$EXE"
@@ -67,18 +71,29 @@
 				set LINKDEBUGFLAGS=-g 
 				set NAME_OUTPUT=-o &quot;%OUTDIR%%MEX_NAME%%MEX_EXT%&quot;"
     />
-    <client>
-    </client>
+    <client/>
 	    <locationFinder>
 		<MINGWROOT>
 			<envVarExists name="MINGWROOT" />
 		</MINGWROOT>
 		</locationFinder>
+	<!-- NOTE 1: The following env tag is evaluated right BEFORE compile and AFTER setup 
+		 (the search for the compiler). So, you can't hard-code the path below.
+		 
+		 NOTE 2: This occurs EVERY TIME you run `mex` to build a MEX file.
+		 
+		 NOTE 3: It is not clear if g++ from the MinGW distributions needs anything 
+		 explicitly added to INCLUDE or LIB. The compiler seems to know the relative
+		 paths to its own headers and libraries. For example, g++ with MinGW-w64
+		 knows to look in ..\x86_64-w64-mingw32\include\c++ from it's location for
+		 the C++ Standard Library headers, g++ with TDM-GCC-64 knows to look in
+		 ..\lib\gcc\x86_64-w64-mingw32\4.9.2\include\c++, etc.
+		 
+		 NOTE 4: LIBPATH is redundant with LIB (see LibrarySearchPath), -->
     <env
-        MINGWROOT="C:\mingw-w64\x86_64-4.9.2-release-posix-seh-rt_v3-rev1"
-        PATH="%MINGWROOT%\bin;%PATH%"
-        INCLUDE="%MINGWROOT%\bin"
-        LIB="%MINGWROOT%\lib;$MATLABROOT\lib\$ARCH"
-        LIBPATH="%MINGWROOT%\lib"
+        PATH="$MINGWROOT\bin"
+        INCLUDE=""
+        LIB="$MATLABROOT\lib\$ARCH"
+        LIBPATH=""
     />
 </config>
