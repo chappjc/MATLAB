@@ -2,7 +2,11 @@
 
 REM MinGW-w64 C++ mexopts.bat
 REM by Jonathan Chappelow (chappjc)
+REM re: http://stackoverflow.com/a/28490382/2778484
+REM This is the legacy MEX configuration method.  See the XML version at:
+REM https://github.com/chappjc/MATLAB/blob/master/MinGW/mex_C%2B%2B_mingw-w64.xml
 
+REM Edit MINGWROOT or set an environment variable
 set MINGWROOT=C:\ProgFiles\MinGW-w64\mingw64
 set PATH=%MINGWROOT%\bin;%PATH%
 
