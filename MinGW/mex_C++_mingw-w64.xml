@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- MEX XML configuration for MinGW
     by Jonathan Chappelow (chappjc)
-    x86_64-4.9.2-release-posix-seh-rt_v3-rev1.7z
+	http://stackoverflow.com/a/28490382/2778484
+	
+    Targeted MinGW version: x86_64-4.9.2-release-posix-seh-rt_v3-rev1.7z (from http://sourceforge.net/projects/mingw-w64)
     
     LocationFinder is used at setup time *and* compile time to get $MINGWROOT 
     from the MINGWROOT environment variable. -->
