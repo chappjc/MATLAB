@@ -1,12 +1,18 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!-- MEX XML configuration for MinGW
     by Jonathan Chappelow (chappjc)
-	http://stackoverflow.com/a/28490382/2778484
-	
+    http://stackoverflow.com/a/28490382/2778484
+    
     Targeted MinGW version: x86_64-4.9.2-release-posix-seh-rt_v3-rev1.7z (from http://sourceforge.net/projects/mingw-w64)
     
     LocationFinder is used at setup time *and* compile time to get $MINGWROOT 
-    from the MINGWROOT environment variable. -->
+    from the MINGWROOT environment variable.
+    
+    To specify static or dynamic C/C++/pthread runtime library linkage, adjust 
+    the LINKTYPE setting in the <vars> tag. For example, with MinGW-w64, to remove 
+    LIBGCC_S_SEH-1.DLL and LIBSTDC++-6.DLL dependencies (and maybe libwinpthread-1.dll):
+    LINKTYPE="-shared -static-libgcc -static-libstdc++ -Wl,-Bstatic -lpthread -Wl,-Bdynamic "
+    -->
 <config
     Name="MinGW-w64 GCC 4.9.2 posixthreads seh"
     ShortName="MINGW64"
@@ -56,7 +62,7 @@
           
           LINKER="x86_64-w64-mingw32-g++"
           LINKFLAGS=" "
-		  LINKTYPE="-shared "
+          LINKTYPE="-shared "
           LINKEXPORT="-Wl,--export-all-symbols "
           LINKLIBS="-L&quot;$MATLABROOT\extern\lib\$ARCH\microsoft&quot; -L&quot;$MATLABROOT\bin\win64&quot; -lmex -lmx -leng -lmat -lmwlapack -lmwblas "
           LINKDEBUGFLAGS="-g"
