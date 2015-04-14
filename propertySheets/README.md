@@ -12,4 +12,4 @@ The relevant settings include:
  6. Sets MATLAB_MEX_FILE (helpful to signal to your own headers if they are being used in a MEX file).
  7. Turns on generation of data required for profiling.
 
-The files MATLABx64.props and MATLABx86.props are for 64-bit and 32-bit MATLAB, respectively.  MATLAB.props is supposed to work for either 32-bit or 64-bit MATLAB using conditional expressions.
+The files MATLABx64.props and MATLABx86.props are for 64-bit and 32-bit MATLAB, respectively.  MATLAB.props is supposed to work for either 32-bit or 64-bit MATLAB using conditional expressions, but I have not tested it extensively.
