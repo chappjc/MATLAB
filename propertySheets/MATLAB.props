@@ -1,7 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- MATLAB MEX file configuration property sheet for Visual Studio
+    by Jonathan Chappelow (chappjc on StackOverflow and Github)
+    http://stackoverflow.com/a/27391300/2778484 -->
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
+    <!-- Either set/use environment variables for the MATLAB paths OR type the path(s) here directly (no quotes) -->
     <MATLAB_BASE Condition="'$(Platform)' == 'Win32'">$(MATLAB32_ROOT)</MATLAB_BASE>
     <MATLAB_BASE Condition="'$(Platform)' == 'x64'">$(MATLAB_ROOT)</MATLAB_BASE>
   </PropertyGroup>
@@ -17,7 +21,8 @@
       <PreprocessorDefinitions>MATLAB_MEX_FILE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories>$(MATLAB_BASE)\extern\lib\win64\microsoft;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories Condition="'$(Platform)' == 'Win32'">$(MATLAB_BASE)\extern\lib\win32\microsoft;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+	  <AdditionalLibraryDirectories Condition="'$(Platform)' == 'x64'">$(MATLAB_BASE)\extern\lib\win64\microsoft;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>libut.lib;libmx.lib;libmex.lib;libmat.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateMapFile>true</GenerateMapFile>
       <Profile>true</Profile>
