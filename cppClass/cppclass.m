@@ -31,6 +31,8 @@ classdef (Abstract = true) cppclass < handle
 
             if ~isempty(obj.instanceHandle)
                 obj.mexClassWrapperFnc('delete', obj.instanceHandle);
+                obj.mexClassWrapperFnc = [];
+                obj.instanceHandle = [];
             end
             
         end
@@ -40,6 +42,8 @@ classdef (Abstract = true) cppclass < handle
     methods (Sealed = true)
         
         function varargout = cppmethod(obj, methodName, varargin)
+            if isempty(obj.instanceHandle),
+                error('cppclass:invalidHandle','No class handle'); end
             [varargout{1:nargout}] = obj.mexClassWrapperFnc(methodName, obj.instanceHandle, varargin{:});
         end
         

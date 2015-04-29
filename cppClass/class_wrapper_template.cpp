@@ -87,10 +87,10 @@ typedef PQheap<data_type> class_type;
 // List actions
 enum class Action
 {
-    // create/destroy instance
+    // create/destroy instance - REQUIRED
     New,
     Delete,
-    // call class methods
+    // user-specified class functionality
     Init,
     Insert,
     ExtractTop,
@@ -102,14 +102,14 @@ enum class Action
 // Map string (first input argument to mexFunction) to an Action
 const std::map<std::string, Action> actionTypeMap =
 {
-    { "new", Action::New },
-    { "delete", Action::Delete },
-    { "init", Action::Init },
-    { "insert", Action::Insert },
-    { "extract", Action::ExtractTop },
-    { "size", Action::Size },
-    { "capacity", Action::Capacity },
-    { "print", Action::Print }
+    { "new",        Action::New },
+    { "delete",     Action::Delete },
+    { "init",       Action::Init },
+    { "insert",     Action::Insert },
+    { "extract",    Action::ExtractTop },
+    { "size",       Action::Size },
+    { "capacity",   Action::Capacity },
+    { "print",      Action::Print }
 }; // if no initializer list available, put declaration and inserts into mexFunction
 
 /////////////////////////  END Step 1: Configuration  /////////////////////////
@@ -117,6 +117,7 @@ const std::map<std::string, Action> actionTypeMap =
 typedef unsigned int handle_type;
 typedef std::pair<handle_type, std::shared_ptr<class_type>> indPtrPair_type; // or boost::shared_ptr
 typedef std::map<indPtrPair_type::first_type, indPtrPair_type::second_type> instanceMap_type;
+typedef indPtrPair_type::second_type instPtr_t;
 
 // getHandle pulls the integer handle out of prhs[1]
 handle_type getHandle(int nrhs, const mxArray *prhs[]);
@@ -128,9 +129,10 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     // static storage duration object for table mapping handles to instances
     static instanceMap_type instanceTab;
 
-    char *actionCstr = nullptr;
-    if (nrhs < 1 || !(actionCstr = mxArrayToString(prhs[0])))
-        mexErrMsgTxt("First input must be an action (new, delete, etc.).");
+    if (nrhs < 1 || !mxIsChar(prhs[0]))
+        mexErrMsgTxt("First input must be an action string ('new', 'delete', or a method name).");
+
+    char *actionCstr = mxArrayToString(prhs[0]); // convert char16_t to char
     std::string actionStr(actionCstr); mxFree(actionCstr);
 
     for (auto & c : actionStr) c = ::tolower(c); // remove this for case sensitivity
@@ -138,11 +140,12 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     if (actionTypeMap.count(actionStr) == 0)
         mexErrMsgTxt(("Unrecognized action (not in actionTypeMap): " + actionStr).c_str());
 
-    // If action is not "new" try to locate an existing instance based on input handle
-    instanceMap_type::const_iterator instIt;
-    if (actionTypeMap.at(actionStr) != Action::New) {
+    // If action is not "new" or "delete" try to locate an existing instance based on input handle
+    instPtr_t instance;
+    if (actionTypeMap.at(actionStr) != Action::New && actionTypeMap.at(actionStr) != Action::Delete) {
         handle_type h = getHandle(nrhs, prhs);
-        instIt = checkHandle(instanceTab, h);
+        instanceMap_type::const_iterator instIt = checkHandle(pqInstances, h);
+        instance = instIt->second;
     }
 
 	//////// Step 2: customize the each action in the switch in mexFuction ////////
@@ -174,17 +177,18 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
         break;
     }
     case Action::Delete:
+    {
         instanceTab.erase(instIt);
         mexUnlock();
         plhs[0] = mxCreateLogicalScalar(instanceTab.empty()); // info
         break;
-		
+    }
     case Action::Init:
         if (nrhs < 3 || mxGetNumberOfElements(prhs[2]) != 1)
             mexErrMsgTxt("Max heap size must be a scalar.");
 
         plhs[0] = mxCreateDoubleScalar(
-            instIt->second->init(static_cast<unsigned int>(mxGetScalar(prhs[2]))) );
+            instance->init(static_cast<unsigned int>(mxGetScalar(prhs[2]))));
 
         break;
 		
@@ -193,29 +197,29 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
         if (nrhs < 3 || mxGetNumberOfElements(prhs[2]) != 1)
             mexErrMsgTxt("Inserted element must be a scalar.");
 
-        int heapPos = instIt->second->insert(static_cast<data_type>(mxGetScalar(prhs[2])));
+        int heapPos = instance->insert(static_cast<data_type>(mxGetScalar(prhs[2])));
         plhs[0] = mxCreateDoubleScalar(heapPos);
 
         break;
     }
     case Action::Capacity:
-        plhs[0] = mxCreateDoubleScalar(instIt->second->capacity());
+        plhs[0] = mxCreateDoubleScalar(instance->capacity());
         break;
 		
     case Action::Size:
-        plhs[0] = mxCreateDoubleScalar(instIt->second->size());
+        plhs[0] = mxCreateDoubleScalar(instance->size());
         break;
 		
     case Action::ExtractTop:
-        plhs[0] = mxCreateDoubleScalar( instIt->second->size() > 0 ? 
-            instIt->second->extractTop() : mxGetNaN() );
+        plhs[0] = mxCreateDoubleScalar( instance->size() > 0 ?
+            instance->extractTop() : mxGetNaN() );
         break;
 		
     case Action::Print:
     {
-        data_type const *data = instIt->second->data();
-        const int len = instIt->second->size();
-        for (int j = 0; j < len; ++j)
+        data_type const *data = instance->data();
+        const int len = instance->size();
+        for (int j = 1; j <= len; ++j)
             mexPrintf("| %g ", data[j]);
         mexPrintf("|\n");
 		break;
