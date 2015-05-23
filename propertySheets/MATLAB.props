@@ -17,13 +17,13 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(MATLAB_BASE)\extern\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(MATLAB_BASE)\extern\include;$(MATLAB_BASE)\toolbox\distcomp\gpu\extern\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MATLAB_MEX_FILE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalLibraryDirectories Condition="'$(Platform)' == 'Win32'">$(MATLAB_BASE)\extern\lib\win32\microsoft;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
 	  <AdditionalLibraryDirectories Condition="'$(Platform)' == 'x64'">$(MATLAB_BASE)\extern\lib\win64\microsoft;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libut.lib;libmx.lib;libmex.lib;libmat.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>libut.lib;libmx.lib;libmex.lib;libmat.lib;gpu.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateMapFile>true</GenerateMapFile>
       <Profile>true</Profile>
       <AdditionalOptions> /EXPORT:mexFunction %(AdditionalOptions)</AdditionalOptions>
