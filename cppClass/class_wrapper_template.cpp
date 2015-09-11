@@ -144,7 +144,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     instPtr_t instance;
     if (actionTypeMap.at(actionStr) != Action::New && actionTypeMap.at(actionStr) != Action::Delete) {
         handle_type h = getHandle(nrhs, prhs);
-        instanceMap_type::const_iterator instIt = checkHandle(pqInstances, h);
+        instanceMap_type::const_iterator instIt = checkHandle(instanceTab, h);
         instance = instIt->second;
     }
 
@@ -178,6 +178,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     }
     case Action::Delete:
     {
+        instanceMap_type::const_iterator instIt = checkHandle(instanceTab, getHandle(nrhs, prhs));
         instanceTab.erase(instIt);
         mexUnlock();
         plhs[0] = mxCreateLogicalScalar(instanceTab.empty()); // info
