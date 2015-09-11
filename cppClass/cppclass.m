@@ -1,6 +1,8 @@
 classdef (Abstract = true) cppclass < handle
 % cppclass: A base class for interfacing with a MEX file that wraps a C++ class
 % by Jonathan Chappelow (chappjc)
+% DO NOT EDIT. Derive from this class as demonstrated in:
+%    https://github.com/chappjc/MATLAB/blob/master/cppClass/pqheap.m
 
     properties (GetAccess = private, SetAccess = immutable, Hidden = true, Transient = true)
         instanceHandle; % integer handle to a class instance in MEX function
