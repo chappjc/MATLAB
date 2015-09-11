@@ -8,22 +8,26 @@
     <!-- Either set/use environment variables for the MATLAB paths OR type the path(s) here directly (no quotes) -->
     <MATLAB_BASE Condition="'$(Platform)' == 'Win32'">$(MATLAB32_ROOT)</MATLAB_BASE>
     <MATLAB_BASE Condition="'$(Platform)' == 'x64'">$(MATLAB_ROOT)</MATLAB_BASE>
+    <MATLAB_LIB_PATH Condition="'$(Platform)' == 'Win32'">$(MATLAB32_ROOT)\extern\lib\win32\microsoft</MATLAB_LIB_PATH>
+    <MATLAB_LIB_PATH Condition="'$(Platform)' == 'x64'">$(MATLAB_ROOT)\extern\lib\win64\microsoft</MATLAB_LIB_PATH>
   </PropertyGroup>
   <PropertyGroup>
     <TargetExt Condition="'$(Platform)' == 'Win32'">.mexw32</TargetExt>
     <TargetExt Condition="'$(Platform)' == 'x64'">.mexw64</TargetExt>
     <EmbedManifest>false</EmbedManifest>
     <ConfigurationType>DynamicLibrary</ConfigurationType> <!-- must only be in project? -->
+    <GPUArrayLib Condition="Exists('$(MATLAB_LIB_PATH)\gpu.lib')">gpu.lib</GPUArrayLib>
+    <GPUArrayLib Condition="!Exists('$(MATLAB_LIB_PATH)\gpu.lib')">
+    </GPUArrayLib>
   </PropertyGroup>
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>$(MATLAB_BASE)\extern\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(MATLAB_BASE)\extern\include;$(MATLAB_BASE)\toolbox\distcomp\gpu\extern\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>MATLAB_MEX_FILE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
-      <AdditionalLibraryDirectories Condition="'$(Platform)' == 'Win32'">$(MATLAB_BASE)\extern\lib\win32\microsoft;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-	  <AdditionalLibraryDirectories Condition="'$(Platform)' == 'x64'">$(MATLAB_BASE)\extern\lib\win64\microsoft;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>libut.lib;libmx.lib;libmex.lib;libmat.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(MATLAB_LIB_PATH);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>libut.lib;libmx.lib;libmex.lib;libmat.lib;$(GPUArrayLib);%(AdditionalDependencies)</AdditionalDependencies>
       <GenerateMapFile>true</GenerateMapFile>
       <Profile>true</Profile>
       <AdditionalOptions> /EXPORT:mexFunction %(AdditionalOptions)</AdditionalOptions>
