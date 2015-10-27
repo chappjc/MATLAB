@@ -1,8 +1,10 @@
 Visual Studio property sheets for rapidly configuring a project to build a MEX file.
 
-The usage of the property sheets (.props files) is described at http://stackoverflow.com/a/27391300/2778484.
+The usage of the property sheets (.props files) is described at http://stackoverflow.com/a/27391300/2778484.  In short, just include the property sheet (MATLAB.props) into your DLL project:
 
-The relevant settings include:
+![add MEX property sheet to Visual Studio project](http://i.stack.imgur.com/pnmDB.png)
+
+The relevant settings configured automatically by the property sheet include:
 
  1. Adding `$(MATLAB_ROOT)\extern\include` to the `AdditionalIncludeDirectories` paths (with inherited paths from parent configurations) -- the location of mex.h.
  2. Adding `$(MATLAB_ROOT)\extern\lib\win64\microsoft` to the `AdditionalLibraryDirectories` paths -- the location of libmex.lib, etc.
