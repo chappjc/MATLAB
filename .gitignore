@@ -1,0 +1,6 @@
+.vscode/
+*.mexw64
+*.mexw32
+*.mexmaci64
+*.mexa64
+*.lib

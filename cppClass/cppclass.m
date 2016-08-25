@@ -33,8 +33,8 @@ classdef (Abstract = true) cppclass < handle
 
             if ~isempty(obj.instanceHandle)
                 obj.mexClassWrapperFnc('delete', obj.instanceHandle);
-                obj.mexClassWrapperFnc = [];
-                obj.instanceHandle = [];
+                % obj.mexClassWrapperFnc = [];
+                % obj.instanceHandle = [];
             end
             
         end

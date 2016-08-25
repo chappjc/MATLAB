@@ -4,8 +4,9 @@ classdef pqheap < cppclass
 % by Jonathan Chappelow (chappjc)
     methods
         
+        % Use the name of your MEX file here
         function obj = pqheap(varargin)
-            obj@cppclass('pqheapMEX',varargin{:});
+            obj@cppclass('class_wrapper_template',varargin{:});
         end
         
         % new and delete are inherited, everything else calls cppmethod()

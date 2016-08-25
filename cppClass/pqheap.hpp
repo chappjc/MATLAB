@@ -1,9 +1,12 @@
 // pqheap.hpp
 //
-// A barebones priority queue class to demonstrate how to wrap a C++ class with
-// a MEX-file and interface with it via the cppclass MATLAB base-class.
-// NOTE: The actual implementation is not included, it will not actually link.
-// Contact me if you are actually interested in the PQ implementation.
+// Template parameters:
+//    1. typename T - the data type of each element.  Can be any type for which
+//       the comparator specified in the next parameter is defined.
+//    2. typename C - A functor: std::less<T> or std::greater<T>.  To create a
+//       min-oriented queue (top is smallest in N largest elements), use 
+//       std::greater<T>. To create a max-oriented queue (top is largest in N
+//       smallest elements), use std::less<T>.
 //
 // by Jonathan Chappelow (chappjc)
 
@@ -12,8 +15,8 @@
 
 #include <functional>
 
-//template <typename T, typename C = std::less<T>()>
-template <typename T>
+//template <typename T>
+template <typename T, typename C = std::less<T>>
 class PQheap
 {
 public:
@@ -33,6 +36,9 @@ public:
     int extractTop(T& t);
     T extractTop();
 
+    int peakTop(const T* t) const;
+    T peakTop() const;
+    void discardTop();
     int size() const { return N; }
     int capacity() const { return cap; }
     bool empty() const { return N == 0; }
@@ -47,8 +53,13 @@ public:
 
 private:
 
+    int heapUp();
+    int heapDown();
+    int heapDownQuick();
+
+    // duplicate code for speed, no default arguments
     int heapUp(int i);
-    int heapDown(int i);
+    int heapDown(int i); // no default, use overload
 
     int heapify();
 
@@ -60,9 +71,10 @@ private:
 
     int N;
     int cap;
+    C cmp;
 };
 
-// implementation:
-// #include "../src/pqheap.cpp"
+// actual implementation separate to keep this file short
+#include "pqheap.cpp"
 
 #endif
