@@ -12,7 +12,7 @@ PQheap<T,C>::PQheap()
 
 template <typename T, typename C>
 PQheap<T,C>::PQheap(unsigned int maxSize)
-: heap(NULL)
+: heap(NULL), N(0), cap(maxSize)
 {
     init(cap);
 }
